@@ -19,7 +19,9 @@
 #define IROHA_YAC_MOCKS_HPP
 
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
+#include "builders/default_builders.hpp"
 #include "builders/protobuf/common_objects/proto_peer_builder.hpp"
 #include "common/byteutils.hpp"
 #include "consensus/yac/cluster_order.hpp"
@@ -32,7 +34,9 @@
 #include "consensus/yac/yac_gate.hpp"
 #include "consensus/yac/yac_hash_provider.hpp"
 #include "consensus/yac/yac_peer_orderer.hpp"
+#include "cryptography/crypto_provider/crypto_defaults.hpp"
 #include "interfaces/iroha_internal/block.hpp"
+#include "module/shared_model/builders/protobuf/test_signature_builder.hpp"
 
 namespace iroha {
   namespace consensus {
@@ -48,13 +52,25 @@ namespace iroha {
 
         return clone(ptr);
       }
+      std::shared_ptr<shared_model::interface::Signature> create_sig(
+          const std::string &pub_key) {
+        auto tmp =
+            shared_model::crypto::DefaultCryptoAlgorithmType::generateKeypair()
+                .publicKey();
+        std::string key(tmp.blob().size(), 0);
+        std::copy(pub_key.begin(), pub_key.end(), key.begin());
+
+        auto signature =
+            clone(TestSignatureBuilder()
+                      .publicKey(shared_model::crypto::PublicKey(key))
+                      .build());
+        return signature;
+      }
 
       VoteMessage create_vote(YacHash hash, std::string pub_key) {
         VoteMessage vote;
         vote.hash = hash;
-        // TODO: 19.01.2019 kamil substitute with function, IR-813
-        std::copy(
-            pub_key.begin(), pub_key.end(), vote.signature.pubkey.begin());
+        vote.signature = create_sig(pub_key);
         return vote;
       }
 
@@ -67,6 +83,7 @@ namespace iroha {
         VoteMessage getVote(YacHash hash) override {
           VoteMessage vote;
           vote.hash = hash;
+          vote.signature = create_sig("");
           return vote;
         }
 

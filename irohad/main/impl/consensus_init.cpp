@@ -38,7 +38,8 @@ namespace iroha {
         return consensus_network;
       }
 
-      auto YacInit::createCryptoProvider(const shared_model::crypto::Keypair &keypair) {
+      auto YacInit::createCryptoProvider(
+          const shared_model::crypto::Keypair &keypair) {
         auto crypto = std::make_shared<CryptoProviderImpl>(keypair);
 
         return crypto;

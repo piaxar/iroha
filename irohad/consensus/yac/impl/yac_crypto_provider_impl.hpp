@@ -19,7 +19,7 @@
 #define IROHA_YAC_CRYPTO_PROVIDER_IMPL_HPP
 
 #include "consensus/yac/yac_crypto_provider.hpp"
-#include "cryptography/keypair.hpp"
+#include "cryptography/crypto_provider/crypto_defaults.hpp"
 
 namespace iroha {
   namespace consensus {

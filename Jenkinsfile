@@ -459,7 +459,25 @@ pipeline {
       steps {
         script {
           def bindings = load ".jenkinsci/bindings.groovy"
+          def fDiffer = load ".jenkinsci/remote-files-differ.groovy"
           def platform = sh(script: 'uname -m', returnStdout: true).trim()
+          def commit = sh(script: "echo ${BRANCH_NAME} | md5sum | cut -c 1-8", returnStdout: true).trim()
+
+          if (fDiffer.remoteFilesDiffer("https://raw.githubusercontent.com/hyperledger/iroha/${env.GIT_COMMIT}/docker/develop/${platform}/Dockerfile", "https://raw.githubusercontent.com/hyperledger/iroha/${env.GIT_PREVIOUS_COMMIT}/docker/develop/${platform}/Dockerfile")) {
+            iC = docker.build("hyperledger/iroha:${commit}", "--build-arg PARALLELISM=${parallelism} -f /tmp/${env.GIT_COMMIT}/f1 /tmp/${env.GIT_COMMIT}")
+
+          }
+          else {
+            // first commit in this branch or Dockerfile modified
+            if (fDiffer.remoteFilesDiffer("https://raw.githubusercontent.com/hyperledger/iroha/${env.GIT_COMMIT}/docker/develop/${platform}/Dockerfile", "https://raw.githubusercontent.com/hyperledger/iroha/develop/docker/develop/${platform}/Dockerfile")) {
+              iC = docker.build("hyperledger/iroha:${commit}", "--build-arg PARALLELISM=${parallelism} -f /tmp/${env.GIT_COMMIT}/f1 /tmp/${env.GIT_COMMIT}")
+            }
+            // reuse develop branch Docker image
+            else {
+              iC = docker.image("hyperledger/iroha:${platform}-develop")
+            }
+          }
+          
           sh "curl -L -o /tmp/${env.GIT_COMMIT}/Dockerfile --create-dirs https://raw.githubusercontent.com/hyperledger/iroha/${env.GIT_COMMIT}/docker/bindings/Dockerfile"
           iC = docker.build("hyperledger/iroha-develop:${GIT_COMMIT}-${BUILD_NUMBER}", "-f /tmp/${env.GIT_COMMIT}/Dockerfile /tmp/${env.GIT_COMMIT} --build-arg PARALLELISM=${PARALLELISM}")
           sh "rm -rf /tmp/${env.GIT_COMMIT}"

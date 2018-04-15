@@ -21,7 +21,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "builders/default_builders.hpp"
 #include "builders/protobuf/common_objects/proto_peer_builder.hpp"
 #include "common/byteutils.hpp"
 #include "consensus/yac/cluster_order.hpp"
@@ -52,7 +51,13 @@ namespace iroha {
 
         return clone(ptr);
       }
-      std::shared_ptr<shared_model::interface::Signature> create_sig(
+
+      /**
+       * Creates test signature with empty signed data, and provided pubkey
+       * @param pub_key - public key to put in the signature
+       * @return signature itself
+       */
+      std::shared_ptr<shared_model::interface::Signature> createSig(
           const std::string &pub_key) {
         auto tmp =
             shared_model::crypto::DefaultCryptoAlgorithmType::generateKeypair()
@@ -70,7 +75,7 @@ namespace iroha {
       VoteMessage create_vote(YacHash hash, std::string pub_key) {
         VoteMessage vote;
         vote.hash = hash;
-        vote.signature = create_sig(pub_key);
+        vote.signature = createSig(pub_key);
         return vote;
       }
 
@@ -83,7 +88,7 @@ namespace iroha {
         VoteMessage getVote(YacHash hash) override {
           VoteMessage vote;
           vote.hash = hash;
-          vote.signature = create_sig("");
+          vote.signature = createSig("");
           return vote;
         }
 

@@ -20,6 +20,7 @@
 #include <grpc++/grpc++.h>
 
 #include "consensus/yac/transport/impl/network_impl.hpp"
+#include "cryptography/crypto_provider/crypto_defaults.hpp"
 
 using ::testing::_;
 using ::testing::InvokeWithoutArgs;
@@ -45,7 +46,7 @@ namespace iroha {
                          .build();
 
           message.hash.block_signature = clone(sig);
-          message.signature = create_sig("");
+          message.signature = createSig("");
           network->subscribe(notifications);
 
           grpc::ServerBuilder builder;

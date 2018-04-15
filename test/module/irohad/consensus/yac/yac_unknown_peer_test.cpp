@@ -51,7 +51,7 @@ TEST_F(YacTest, UnknownVoteBeforeCommit) {
   VoteMessage vote;
   vote.hash = YacHash("my_proposal", "my_block");
   std::string unknown = "unknown";
-  vote.signature = iroha::consensus::yac::create_sig(unknown);
+  vote.signature = iroha::consensus::yac::createSig(unknown);
 
   // assume that our peer receive message
   network->notification->on_vote(vote);
@@ -102,6 +102,6 @@ TEST_F(YacTest, UnknownVoteAfterCommit) {
   VoteMessage vote;
   vote.hash = my_hash;
   std::string unknown = "unknown";
-  vote.signature = create_sig(unknown);
+  vote.signature = createSig(unknown);
   yac->on_vote(vote);
 }

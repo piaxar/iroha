@@ -39,6 +39,7 @@ auto mk_local_peer(uint64_t num) {
 class FixedCryptoProvider : public MockYacCryptoProvider {
  public:
   explicit FixedCryptoProvider(const std::string &public_key) {
+    // TODO 15.04.2018 x3medima17 IR-1189: move to separate class
     auto tmp =
         shared_model::crypto::DefaultCryptoAlgorithmType::generateKeypair()
             .publicKey();
@@ -149,7 +150,7 @@ TEST_F(ConsensusSunnyDayTest, SunnyDayTest) {
   std::this_thread::sleep_for(std::chrono::milliseconds(delay_before));
 
   YacHash my_hash("proposal_hash", "block_hash");
-  my_hash.block_signature = create_sig("");
+  my_hash.block_signature = createSig("");
   auto order = ClusterOrdering::create(default_peers);
   ASSERT_TRUE(order);
 

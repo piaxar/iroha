@@ -20,15 +20,6 @@ admin_priv = open("../admin@test.priv", "r").read()
 admin_pub = open("../admin@test.pub", "r").read()
 key_pair = crypto.convertFromExisting(admin_pub, admin_priv)
 
-# user1_priv = open("../user1@domain.priv", "w")
-# user1_pub = open("../user1@domain.pub", "w")
-# user1_kp = crypto.generateKeypair()
-# user1_priv.write(user1_kp.privateKey().hex())
-# user1_pub.write(user1_kp.publicKey().hex())
-# user1_priv.close()
-# user1_pub.close()
-
-# user1_kp = crypto.convertFromExisting(open("../user1@domain.pub", "r").read(), open("../user1@domain.priv", "r").read())
 user1_kp = crypto.generateKeypair()
 
 current_time = int(round(time.time() * 1000)) - 10**5

@@ -640,11 +640,6 @@ namespace iroha {
       const shared_model::interface::SetAccountDetail &command,
       ametsuchi::WsvQuery &queries,
       const shared_model::interface::types::AccountIdType &creator_account_id) {
-    std::cout << "creator: " << creator_account_id << std::endl
-              << command.accountId() << std::endl
-              << command.key() << std::endl
-              << command.value() << std::endl;
-
     return
         // Case 1. Creator set details for his account
         creator_account_id == command.accountId() or

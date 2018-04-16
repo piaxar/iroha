@@ -20,6 +20,17 @@ admin_priv = open("../admin@test.priv", "r").read()
 admin_pub = open("../admin@test.pub", "r").read()
 key_pair = crypto.convertFromExisting(admin_pub, admin_priv)
 
+# user1_priv = open("../user1@domain.priv", "w")
+# user1_pub = open("../user1@domain.pub", "w")
+# user1_kp = crypto.generateKeypair()
+# user1_priv.write(user1_kp.privateKey().hex())
+# user1_pub.write(user1_kp.publicKey().hex())
+# user1_priv.close()
+# user1_pub.close()
+
+# user1_kp = crypto.convertFromExisting(open("../user1@domain.pub", "r").read(), open("../user1@domain.priv", "r").read())
+user1_kp = crypto.generateKeypair()
+
 current_time = int(round(time.time() * 1000)) - 10**5
 creator = "admin@test"
 
@@ -136,8 +147,6 @@ def tx2():
 
 
 def tx3():
-    user1_kp = crypto.generateKeypair()
-
     tx = tx_builder.creatorAccountId(creator) \
         .txCounter(3) \
         .createdTime(current_time) \
@@ -152,6 +161,28 @@ def tx4():
         .txCounter(4) \
         .createdTime(current_time) \
         .transferAsset("admin@test", "userone@domain", "coin#domain", "Some message", "2.00").build()
+
+    send_tx(tx, key_pair)
+    print_status_streaming(tx)
+
+def tx5():
+    # grant admin to set detail of the user userone@domain
+    tx = tx_builder.creatorAccountId("userone@domain") \
+        .txCounter(4) \
+        .createdTime(current_time) \
+        .grantPermission(creator, "can_set_my_account_detail") \
+        .build()
+
+    send_tx(tx, user1_kp)
+    print_status_streaming(tx)
+
+def tx6():
+    # set detail to userone@domain by the admin
+    tx = tx_builder.creatorAccountId(creator) \
+        .txCounter(4) \
+        .createdTime(current_time) \
+        .setAccountDetail("userone@domain", "key1", "value1") \
+        .build()
 
     send_tx(tx, key_pair)
     print_status_streaming(tx)
@@ -188,11 +219,26 @@ def get_account_asset():
 
     print(query_response)
 
+def get_user_detail():
+    # get detail of the user
+    query = query_builder.creatorAccountId(creator) \
+        .createdTime(current_time) \
+        .queryCounter(11) \
+        .getAccountDetail("userone@domain") \
+        .build()
+
+    query_response = send_query(query, key_pair)
+    print(query_response.account_detail_response.detail)
+
+
 
 tx1()
 tx2()
 tx3()
 tx4()
+tx5()
+tx6()
 get_asset()
 get_account_asset()
+get_account_detail()
 print("done!")

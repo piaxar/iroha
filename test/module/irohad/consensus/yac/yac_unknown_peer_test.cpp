@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ TEST_F(YacTest, UnknownVoteBeforeCommit) {
   VoteMessage vote;
   vote.hash = YacHash("my_proposal", "my_block");
   std::string unknown = "unknown";
-  vote.signature = iroha::consensus::yac::createSig(unknown);
+  vote.signature = createSig(unknown);
 
   // assume that our peer receive message
   network->notification->on_vote(vote);

@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +22,6 @@
 
 #include "consensus/yac/yac_hash_provider.hpp"  // for YacHash
 #include "interfaces/common_objects/signature.hpp"
-
-namespace shared_model {
-  namespace interface {
-    class Signature;
-  }
-}  // namespace shared_model
 
 namespace iroha {
   namespace consensus {

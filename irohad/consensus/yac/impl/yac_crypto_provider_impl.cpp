@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,8 @@
 namespace iroha {
   namespace consensus {
     namespace yac {
-      CryptoProviderImpl::CryptoProviderImpl(const shared_model::crypto::Keypair &keypair)
+      CryptoProviderImpl::CryptoProviderImpl(
+          const shared_model::crypto::Keypair &keypair)
           : keypair_(keypair) {}
 
       bool CryptoProviderImpl::verify(CommitMessage msg) {
@@ -50,14 +51,13 @@ namespace iroha {
       }
 
       VoteMessage CryptoProviderImpl::getVote(YacHash hash) {
-        logger::Logger log = logger::log("YacCryptoProvider::getVote");
         VoteMessage vote;
         vote.hash = hash;
         auto serialized =
             PbConverters::serializeVotePayload(vote).hash().SerializeAsString();
         auto blob = shared_model::crypto::Blob(serialized);
-        auto pubkey = keypair_.publicKey();
-        auto privkey = keypair_.privateKey();
+        const auto &pubkey = keypair_.publicKey();
+        const auto &privkey = keypair_.privateKey();
         auto signature = shared_model::crypto::CryptoSigner<>::sign(
             blob, shared_model::crypto::Keypair(pubkey, privkey));
 
@@ -70,8 +70,11 @@ namespace iroha {
                     std::shared_ptr<shared_model::interface::Signature>> &sig) {
                   vote.signature = sig.value;
                 },
-                [&log](iroha::expected::Error<std::shared_ptr<std::string>>
-                           &reason) { log->error(*reason.error); });
+                [](iroha::expected::Error<std::shared_ptr<std::string>>
+                       &reason) {
+                  logger::log("YacCryptoProvider::getVote")
+                      ->error("Cannot build vote signature: {}", *reason.error);
+                });
         return vote;
       }
 

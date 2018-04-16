@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,6 @@
 #include <grpc++/grpc++.h>
 
 #include "consensus/yac/transport/impl/network_impl.hpp"
-#include "cryptography/crypto_provider/crypto_defaults.hpp"
 
 using ::testing::_;
 using ::testing::InvokeWithoutArgs;

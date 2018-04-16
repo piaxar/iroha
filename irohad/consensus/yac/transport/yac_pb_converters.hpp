@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +76,6 @@ namespace iroha {
 
         static boost::optional<VoteMessage> deserializeVote(
             const proto::Vote &pb_vote) {
-          logger::Logger log = logger::log("YacPbConverter::deserializaVote");
           VoteMessage vote;
           vote.hash.proposal_hash = pb_vote.hash().proposal();
           vote.hash.block_hash = pb_vote.hash().block();
@@ -90,8 +89,12 @@ namespace iroha {
               .match([&](iroha::expected::Value<
                          std::shared_ptr<shared_model::interface::Signature>>
                              &sig) { vote.hash.block_signature = sig.value; },
-                     [&log](iroha::expected::Error<std::shared_ptr<std::string>>
-                                &reason) { log->error(*reason.error); });
+                     [&](iroha::expected::Error<std::shared_ptr<std::string>>
+                             &reason) {
+                       logger::log("YacPbConverter::deserializeVote")
+                           ->error("Cannot build vote hash block signature: {}",
+                                   *reason.error);
+                     });
 
           const auto &pubkey =
               shared_model::crypto::PublicKey(pb_vote.signature().pubkey());
@@ -105,8 +108,12 @@ namespace iroha {
               .match([&](iroha::expected::Value<
                          std::shared_ptr<shared_model::interface::Signature>>
                              &sig) { vote.signature = sig.value; },
-                     [&log](iroha::expected::Error<std::shared_ptr<std::string>>
-                                &reason) { log->error(*reason.error); });
+                     [&](iroha::expected::Error<std::shared_ptr<std::string>>
+                             &reason) {
+                       logger::log("YacPbConverter::deserializeVote")
+                           ->error("Cannot build vote signature: {}",
+                                   *reason.error);
+                     });
 
           return vote;
         }

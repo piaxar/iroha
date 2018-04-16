@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@
 #include "module/irohad/consensus/yac/yac_mocks.hpp"
 #include "module/irohad/network/network_mocks.hpp"
 #include "module/irohad/simulator/simulator_mocks.hpp"
-#include "cryptography/hash.hpp"
 
 using namespace iroha::consensus::yac;
 using namespace iroha::network;
@@ -63,7 +62,6 @@ class YacGateTest : public ::testing::Test {
     expected_block = clone(tmp);
     const auto &wrapped_sig = *(expected_block->signatures().begin());
     const auto &signature = *wrapped_sig;
-
 
     expected_hash.block_signature = clone(signature);
     message.hash = expected_hash;
@@ -131,9 +129,8 @@ TEST_F(YacGateTest, YacGateSubscriptionTest) {
 
   // verify that yac gate emit expected block
   auto gate_wrapper = make_test_subscriber<CallExact>(gate->on_commit(), 1);
-  gate_wrapper.subscribe([this](auto block) {
-    ASSERT_EQ(*block, *expected_block);
-  });
+  gate_wrapper.subscribe(
+      [this](auto block) { ASSERT_EQ(*block, *expected_block); });
 
   ASSERT_TRUE(gate_wrapper.validate());
 }

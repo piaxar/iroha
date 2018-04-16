@@ -21,7 +21,7 @@
 #include "builders/protobuf/common_objects/proto_signature_builder.hpp"
 
 /**
- * Builder alias, to build shared model proto block object avoiding validation
+ * Builder alias, for building shared model proto block object avoiding validation
  * and "required fields" check
  */
 using TestSignatureBuilder = shared_model::proto::SignatureBuilder;

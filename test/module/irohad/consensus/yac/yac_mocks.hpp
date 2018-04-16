@@ -19,7 +19,6 @@
 #define IROHA_YAC_MOCKS_HPP
 
 #include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 #include "builders/protobuf/common_objects/proto_peer_builder.hpp"
 #include "common/byteutils.hpp"
@@ -55,7 +54,7 @@ namespace iroha {
       /**
        * Creates test signature with empty signed data, and provided pubkey
        * @param pub_key - public key to put in the signature
-       * @return signature itself
+       * @return new signature itself
        */
       std::shared_ptr<shared_model::interface::Signature> createSig(
           const std::string &pub_key) {

@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 
 #include "builders/common_objects/peer_builder.hpp"
 #include "builders/protobuf/common_objects/proto_peer_builder.hpp"
-#include "cryptography/crypto_provider/crypto_defaults.hpp"
 #include "module/irohad/ametsuchi/ametsuchi_mocks.hpp"
 #include "module/irohad/consensus/yac/yac_mocks.hpp"
 #include "module/shared_model/builders/protobuf/test_block_builder.hpp"

@@ -1,5 +1,5 @@
 /**
- * Copyright Soramitsu Co., Ltd. 2017 All Rights Reserved.
+ * Copyright Soramitsu Co., Ltd. 2018 All Rights Reserved.
  * http://soramitsu.co.jp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,10 +40,11 @@ class FixedCryptoProvider : public MockYacCryptoProvider {
  public:
   explicit FixedCryptoProvider(const std::string &public_key) {
     // TODO 15.04.2018 x3medima17 IR-1189: move to separate class
-    auto tmp =
+    auto size =
         shared_model::crypto::DefaultCryptoAlgorithmType::generateKeypair()
-            .publicKey();
-    std::string key(tmp.blob().size(), 0);
+            .publicKey().size();
+    // TODO 16.04.2018 x3medima17 IR-977: add sizes
+    std::string key(size, 0);
     std::copy(public_key.begin(), public_key.end(), key.begin());
     pubkey = clone(shared_model::crypto::PublicKey(key));
   }

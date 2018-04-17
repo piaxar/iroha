@@ -14,7 +14,7 @@ def buildOptionsString(options) {
   def s = ''
   if (options) {
     options.each { k, v ->
-      s += "--build-arg ${k}={v} "
+      s += "--build-arg ${k}=${v} "
     }
     return s
   }

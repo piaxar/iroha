@@ -24,29 +24,29 @@ def buildOptionsString(options) {
 def dockerPullOrUpdate(imageName, currentDockerfileURL, previousDockerfileURL, referenceDockerfileURL, buildOptions=null) {
   buildOptions = buildOptionsString(buildOptions)
   def commit = sh(script: "echo ${BRANCH_NAME} | md5sum | cut -c 1-8", returnStdout: true).trim()
-  if (remoteFilesDiffer($currentDockerfileURL, $previousDockerfileURL)) {
-    iC = docker.build("hyperledger/iroha:${commit}", "--build-arg PARALLELISM=${env.PARALLELISM} $buildOptions -f /tmp/${env.GIT_COMMIT}/f1 /tmp/${env.GIT_COMMIT}")
+  if (remoteFilesDiffer(currentDockerfileURL, previousDockerfileURL)) {
+    iC = docker.build("hyperledger/iroha:${commit}", "--build-arg PARALLELISM=${env.PARALLELISM} ${buildOptions} -f /tmp/${env.GIT_COMMIT}/f1 /tmp/${env.GIT_COMMIT}")
     // develop branch Docker image has been modified
     if (BRANCH_NAME == 'develop') {
       docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-        iC.push($imageName)
+        iC.push(imageName)
       }
     }
   }
   else {
     // reuse develop branch Docker image
     if (BRANCH_NAME == 'develop') {
-      iC = docker.image("hyperledger/iroha:$imageName")
+      iC = docker.image("hyperledger/iroha:${imageName}")
       iC.pull()
     }
     else {
       // first commit in this branch or Dockerfile modified
-      if (remoteFilesDiffer($currentDockerfileURL, $referenceDockerfileURL)) {
+      if (remoteFilesDiffer(currentDockerfileURL, referenceDockerfileURL)) {
         iC = docker.build("hyperledger/iroha:${commit}", "--build-arg PARALLELISM=${env.PARALLELISM} $buildOptions -f /tmp/${env.GIT_COMMIT}/f1 /tmp/${env.GIT_COMMIT}")
       }
       // reuse develop branch Docker image
       else {
-        iC = docker.image("hyperledger/iroha:$imageName")
+        iC = docker.image("hyperledger/iroha:${imageName}")
       }
     }
   }

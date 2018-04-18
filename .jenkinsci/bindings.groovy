@@ -38,7 +38,7 @@ def doAndroidBindings(abiVersion) {
     (cd /iroha; git init; git remote add origin https://github.com/hyperledger/iroha.git; \
     git fetch --depth 1 origin develop; git checkout -t origin/develop)
   """
-  sh '
+  sh """
     . /entrypoint.sh; \
     # SWIG fixes magic
     sed -i.bak "s~find_package(JNI REQUIRED)~#find_package(JNI REQUIRED)~" /iroha/shared_model/bindings/CMakeLists.txt; \
@@ -51,7 +51,7 @@ def doAndroidBindings(abiVersion) {
     cmake -H/iroha/shared_model -B/iroha/shared_model/build -DCMAKE_SYSTEM_NAME=Android -DCMAKE_SYSTEM_VERSION=$abiVersion -DCMAKE_ANDROID_ARCH_ABI=\$PLATFORM \
       -DANDROID_NDK=\$NDK_PATH -DCMAKE_ANDROID_STL_TYPE=c++_static -DCMAKE_BUILD_TYPE=\$BUILD_TYPE -DTESTING=OFF \
       -DSHARED_MODEL_DISABLE_COMPATIBILITY=ON -DSWIG_JAVA=ON -DCMAKE_PREFIX_PATH=\$DEPS_DIR
-    '
+    """
   sh "cmake --build /iroha/shared_model/build --target irohajava -- -j${params.PARALLELISM}"
   sh "zip $artifactsPath /iroha/shared_model/build/bindings/*.java /iroha/shared_model/build/bindings/libirohajava.so"
   return artifactsPath

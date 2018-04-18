@@ -34,6 +34,7 @@ def doPythonBindings(buildType=Release) {
 def doAndroidBindings(abiVersion) {
   def currentPath = sh(script: "pwd", returnStdout: true).trim()
   def artifactsPath = "$currentPath/android-bindings-\$PLATFORM-$abiVersion-\$BUILD_TYPE.zip"
+  sh ". /entrypoint.sh"
   sh """
     (cd /iroha; git init; git remote add origin https://github.com/hyperledger/iroha.git; \
     git fetch --depth 1 origin develop; git checkout -t origin/develop)

@@ -494,7 +494,7 @@ pipeline {
                                                  ['PARALLELISM': params.PARALLELISM, 'PLATFORM': params.ABPlatform, 'BUILD_TYPE': params.ABBuildType])
             sh "curl -L -o /tmp/${env.GIT_COMMIT}/entrypoint.sh https://raw.githubusercontent.com/hyperledger/iroha/feature/ops-bindings-android/docker/android/entrypoint.sh"
             sh "chmod +x /tmp/${env.GIT_COMMIT}/entrypoint.sh"
-            iC.inside("-v /tmp/${env.GIT_COMMIT}/entrypoint.sh:/entrypoint.sh:ro --entrypoint /entrypoint.sh") {
+            iC.inside("-v /tmp/${env.GIT_COMMIT}/entrypoint.sh:/entrypoint.sh:ro") {
               bindings.doAndroidBindings(params.ABABIVersion)
             }
           }

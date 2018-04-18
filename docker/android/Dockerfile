@@ -48,8 +48,9 @@ RUN set -e; \
 	git clone git://github.com/hyperledger/iroha-ed25519; \
 	(cd ./iroha-ed25519 ; git checkout e7188b8393dbe5ac54378610d53630bd4a180038); \
 	cmake -DCMAKE_SYSTEM_NAME=Android -DCMAKE_SYSTEM_VERSION=$VERSION -DCMAKE_ANDROID_ARCH_ABI=$PLATFORM -DANDROID_NDK=$NDK_PATH -DCMAKE_ANDROID_STL_TYPE=c++_static -DCMAKE_INSTALL_PREFIX=$DEPS_DIR -DTESTING=OFF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD=STATIC -H./iroha-ed25519 -B./iroha-ed25519/build; \
-	VERBOSE=1 cmake --build ./iroha-ed25519/build --target install -- -j$PARALLELISM
+	VERBOSE=1 cmake --build ./iroha-ed25519/build --target install -- -j$PARALLELISM; \
+	mv "$DEPS_DIR"/lib/static/libed25519.a "$DEPS_DIR"/lib; rmdir "$DEPS_DIR"/lib/static/
 
-ADD entrypoint.sh /
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+#ADD entrypoint.sh /
+#RUN chmod +x /entrypoint.sh
+#ENTRYPOINT ["/entrypoint.sh"]

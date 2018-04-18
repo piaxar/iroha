@@ -1,6 +1,4 @@
 #!/bin/bash
-mv "$DEPS_DIR"/lib/static/libed25519.a "$DEPS_DIR"/lib
-rmdir "$DEPS_DIR"/lib/static/
 export LIBP=lib
 case "$PLATFORM" in
   armeabi)

@@ -498,7 +498,7 @@ pipeline {
               bindings.doAndroidBindings(params.ABABIVersion)
             }
           }
-          // TODO: move to post `always`
+          // TODO: move to post 'always'
           sh "rm -rf /tmp/${env.GIT_COMMIT}"
           iC.inside {
             def scmVars = checkout scm

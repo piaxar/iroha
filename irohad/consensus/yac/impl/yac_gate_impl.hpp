@@ -50,7 +50,10 @@ namespace iroha {
                     uint64_t delay);
         void vote(const shared_model::interface::Block &) override;
         rxcpp::observable<std::shared_ptr<shared_model::interface::Block>>
-        //method assumes to retrieve a block eventually
+        /**
+         * method called when commit recived
+         * assumes to retrieve a block eventually
+         */
         on_commit() override;
 
        private:

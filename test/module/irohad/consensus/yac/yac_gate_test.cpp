@@ -208,6 +208,11 @@ TEST_F(YacGateTest, LoadBlockWhenDifferentCommit) {
 
   ASSERT_TRUE(gate_wrapper.validate());
 }
+/**
+ * @given yac gate
+ * @when recives new commit different to the one it voted for
+ * @then polls nodes for the block with corresponding hash untill it succeed
+ */
 TEST_F(YacGateTest, LoadBlockWhenDifferentCommitFailFirst) {
   // Vote for block => receive different block => load committed block
 

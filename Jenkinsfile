@@ -494,10 +494,11 @@ pipeline {
                                                  ['PARALLELISM': params.PARALLELISM, 'PLATFORM': params.ABPlatform, 'BUILD_TYPE': params.ABBuildType])
             sh "curl -L -o /tmp/${env.GIT_COMMIT}/entrypoint.sh https://raw.githubusercontent.com/hyperledger/iroha/feature/ops-bindings-android/docker/android/entrypoint.sh"
             sh "chmod +x /tmp/${env.GIT_COMMIT}/entrypoint.sh"
-            iC.inside("--entrypoint /tmp/${env.GIT_COMMIT}/entrypoint.sh") {
+            iC.inside("-v /tmp/${env.GIT_COMMIT}/entrypoint.sh:/entrypoint.sh:ro --entrypoint /entrypoint.sh") {
               bindings.doAndroidBindings(params.ABABIVersion)
             }
           }
+          // TODO: move to post `always`
           sh "rm -rf /tmp/${env.GIT_COMMIT}"
           iC.inside {
             def scmVars = checkout scm

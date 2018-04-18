@@ -42,7 +42,7 @@ def doAndroidBindings(abiVersion) {
   sh 'sed -i.bak "s~find_package(JNI REQUIRED)~#find_package(JNI REQUIRED)~" /iroha/shared_model/bindings/CMakeLists.txt'
   sh 'sed -i.bak "s~# the include path to jni.h and jni_md.h~SET(CMAKE_SWIG_FLAGS \\\${CMAKE_SWIG_FLAGS} -package \${PACKAGE})~" /iroha/shared_model/bindings/CMakeLists.txt'
   // TODO: might not be needed in the future
-  sh 'sed -i.bak "/target_include_directories/,+3d" /iroha/shared_model/bindings/CMakeLists.txt'
+  sh 'sed -i.bak "/target_include_directories(\\\${SWIG_MODULE_irohajava_REAL_NAME} PUBLIC/,+3d" /iroha/shared_model/bindings/CMakeLists.txt'
   sh 'sed -i.bak "s~swig_link_libraries(irohajava~swig_link_libraries(irohajava \"/protobuf/.build/lib\${PROTOBUF_LIB_NAME}.a\" \"\${NDK_PATH}/platforms/android-$abiVersion/\${ARCH}/usr/\${LIBP}/liblog.so\"~" /iroha/shared_model/bindings/CMakeLists.txt'
   sh 'sed -i.bak "s~find_library(protobuf_LIBRARY protobuf)~find_library(protobuf_LIBRARY \${PROTOBUF_LIB_NAME})~" /iroha/cmake/Modules/Findprotobuf.cmake'
   sh 'sed -i.bak "s~find_program(protoc_EXECUTABLE protoc~set(protoc_EXECUTABLE \"/protobuf/host_build/protoc\"~" /iroha/cmake/Modules/Findprotobuf.cmake'
